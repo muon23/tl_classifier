@@ -20,6 +20,7 @@ class NNClassifier:
             dropout: float = None,
             default_epochs=60,
             default_patience=3,
+            confidence: float = None,
     ):
         super(NNClassifier, self).__init__()
         if hidden_dims is None:
@@ -27,8 +28,15 @@ class NNClassifier:
 
         self.num_features = num_featuers
         self.num_classes = num_classes
+        self.confidence = confidence
 
-        self.model = ForwardNN(input_dim=num_featuers, output_dim=num_classes, hidden_dims=hidden_dims, dropout=dropout)
+        self.model = ForwardNN(
+            input_dim=num_featuers,
+            output_dim=num_classes,
+            hidden_dims=hidden_dims,
+            dropout=dropout,
+            softmax=(confidence is not None)
+        )
 
         self.criterion = nn.CrossEntropyLoss()
         self.optimizer = optim.Adam(self.model.parameters(), lr=0.001)
@@ -135,15 +143,20 @@ class NNClassifier:
 
         # Perform inference
         with torch.no_grad():
-            outputs = self.model(features_tensor)
+            outputs = self.model.predict(features_tensor)
 
         # Get the predicted classes in (max value, index of max value)
-        _, predicted = torch.max(outputs, 1)
+        max_probs, predicted = torch.max(outputs, 1)
+
+        if self.confidence:
+            unknown_class = max_probs < self.confidence
+            predicted[unknown_class] = -1
 
         if single:
             predicted = predicted.item()
+            max_probs = max_probs.item()
 
-        return predicted.numpy()  # Convert the tensor back to a numpy array if needed
+        return np.c_[predicted.numpy(), max_probs.numpy()]  # Convert the tensor back to a numpy array if needed
 
     def save(self, path: str):
         pass

@@ -1,5 +1,6 @@
 from typing import List
 
+import torch
 from torch import nn
 
 
@@ -10,6 +11,7 @@ class ForwardNN(nn.Module):
             output_dim: int,
             hidden_dims: List[int] = None,
             dropout: float = None,
+            softmax: bool = True,
     ):
         super(ForwardNN, self).__init__()
         if hidden_dims is None:
@@ -18,18 +20,32 @@ class ForwardNN(nn.Module):
         self.input_dim = input_dim
         self.output_dim = output_dim
 
-        layers = []
+        self.layers = nn.ModuleList()
         dropout = nn.Dropout(p=dropout) if dropout else None
 
-        layers.append(nn.Linear(input_dim, hidden_dims[0]))
+        self.layers.append(nn.Linear(input_dim, hidden_dims[0]))
         for layer in range(len(hidden_dims) - 1):
-            layers.append(nn.Linear(hidden_dims[layer], hidden_dims[layer + 1]))
-            layers.append(nn.ReLU())
-            if dropout:
-                layers.append(dropout)
-        layers.append(nn.Linear(hidden_dims[-1], output_dim))
+            self.layers.append(nn.Linear(hidden_dims[layer], hidden_dims[layer + 1]))
+            # self.layers.append(nn.ReLU())
+            # if dropout:
+            #     self.layers.append(dropout)
 
-        self.layers = nn.Sequential(*layers)
+        self.layers.append(nn.Linear(hidden_dims[-1], output_dim))
+
+        self.softmax = nn.Softmax(dim=1) if softmax else None
+
+        # self.layers = nn.Sequential(*layers)
 
     def forward(self, x):
-        return self.layers(x)
+        # return self.layers(x)
+
+        for layer in self.layers[:-1]:
+            x = torch.relu(layer(x))
+        x = self.layers[-1](x)
+        return x
+
+    def predict(self, x):
+        x = self.forward(x)
+        if self.softmax:
+            x = self.softmax(x)
+        return x

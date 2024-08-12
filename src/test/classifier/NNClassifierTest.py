@@ -34,7 +34,7 @@ class NNClassifierTest(unittest.TestCase):
         # Split into train and test sets
         x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-        classifier = NNClassifier(num_featuers=num_features, num_classes=num_classes)
+        classifier = NNClassifier(num_featuers=num_features, num_classes=num_classes, confidence=0.6)
         classifier.train_with(x_train, y_train, x_test, y_test)
 
         # Make a bunch of test data all in class 1
