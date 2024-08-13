@@ -2,6 +2,7 @@ from typing import List
 
 import numpy as np
 import torch
+from tqdm import tqdm
 from transformers import DistilBertTokenizer, DistilBertModel
 
 from embedding.Embedding import Embedding
@@ -36,9 +37,11 @@ class TransformersEmbedding(Embedding):
 
         self.batch_size = batch_size
 
-    def embed(self, texts: List[str]) -> np.ndarray:
+    def embed(self, texts: List[str], **kwargs) -> np.ndarray:
+        show_progress = kwargs.get("show_progress", False)
+
         embeddings = torch.Tensor()
-        for i in range(0, len(texts), self.batch_size):
+        for i in tqdm(range(0, len(texts), self.batch_size), disable=not show_progress):
             batch = texts[i: i + self.batch_size]
             encoded = self.tokenizer(batch, return_tensors='pt', max_length=512, truncation=True, padding=True)
             with torch.no_grad():

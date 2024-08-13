@@ -20,14 +20,15 @@
 - Generic classifier works (trainable, inferable)
 - Generic classifier save/load
 - Embedding objects
+- Text classifier extends from the generic classifier
+- Main programs for training and inference pipelines
 
 ### In Progress
-- Text classifier extends from the generic classifier (notebook successful, coding objects)
+
+- REST API
 
 ### To-Dos
 
-- Main programs for training and inference pipelines
-- REST API
 - Deployment scripts and Dockerfile
 
 

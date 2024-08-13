@@ -5,7 +5,7 @@ import embedding
 class EmbeddingTest(unittest.TestCase):
 
     def test_bert(self):
-        embedding_model = embedding.of("bert")
+        embedding_model = embedding.using("bert")
 
         texts = [
             "US won men's basketball gold medal in 2024 Paris Olympics.",

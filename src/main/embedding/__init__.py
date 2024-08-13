@@ -3,7 +3,7 @@ from embedding.AdaEmbedding import AdaEmbedding
 from embedding.TransformersEmbedding import TransformersEmbedding
 
 
-def of(model_name: str) -> Embedding:
+def using(model_name: str) -> Embedding:
     try:
         return TransformersEmbedding(model_name)
     except NotImplementedError:

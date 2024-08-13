@@ -21,7 +21,7 @@ class ForwardNN(nn.Module):
         self.output_dim = output_dim
 
         self.layers = nn.ModuleList()
-        dropout = nn.Dropout(p=dropout) if dropout else None
+        self.dropout = nn.Dropout(p=dropout) if dropout else None
 
         self.layers.append(nn.Linear(input_dim, hidden_dims[0]))
         for layer in range(len(hidden_dims) - 1):
@@ -31,16 +31,13 @@ class ForwardNN(nn.Module):
             #     self.layers.append(dropout)
 
         self.layers.append(nn.Linear(hidden_dims[-1], output_dim))
-
         self.softmax = nn.Softmax(dim=1) if softmax else None
 
-        # self.layers = nn.Sequential(*layers)
-
     def forward(self, x):
-        # return self.layers(x)
-
         for layer in self.layers[:-1]:
             x = torch.relu(layer(x))
+            if self.dropout:
+                x = self.dropout(x)
         x = self.layers[-1](x)
         return x
 

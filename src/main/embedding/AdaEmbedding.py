@@ -12,7 +12,7 @@ class AdaEmbedding(Embedding):
         # TODO: Place holder
         raise NotImplementedError(f"Embedding model {model_name} not supported")
 
-    def embed(self, texts: List[str]) -> np.ndarray:
+    def embed(self, texts: List[str], **kwargs) -> np.ndarray:
         pass
 
     def dimensions(self) -> int:

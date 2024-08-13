@@ -9,7 +9,7 @@ class Embedding(ABC):
         self.model_name = model_name
 
     @abstractmethod
-    def embed(self, texts: List[str]) -> np.ndarray:
+    def embed(self, texts: List[str], **kwargs) -> np.ndarray:
         pass
 
     @abstractmethod

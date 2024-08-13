@@ -213,6 +213,9 @@ class NNClassifier:
         except Exception as e:
             cls.logger.error(f"Problem loading model from {model_file}: {e}")
 
+        classifier.criterion = nn.CrossEntropyLoss()
+        classifier.optimizer = optim.Adam(classifier.model.parameters(), lr=0.001)
+
         return classifier
 
 
