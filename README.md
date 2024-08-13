@@ -23,7 +23,7 @@
 
 - Generic classifier save/load
 - Text classifier extends from the generic classifier
-- Main programs for training and inference
+- Main programs for training and inference pipelines
 - REST API
 - Deployment scripts and Dockerfile
 

@@ -1,5 +1,7 @@
+import json
 import logging
-from typing import List
+import os
+from typing import List, Union
 
 import numpy as np
 import torch
@@ -12,9 +14,11 @@ from classifier.SupervisedDataset import SupervisedDataset
 
 class NNClassifier:
 
+    logger: logging.Logger = None
+
     def __init__(
             self,
-            num_featuers: int,
+            num_features: int,
             num_classes: int,
             hidden_dims: List[int] = None,
             dropout: float = None,
@@ -26,16 +30,18 @@ class NNClassifier:
         if hidden_dims is None:
             hidden_dims = [64, 32]
 
-        self.num_features = num_featuers
+        self.num_features = num_features
         self.num_classes = num_classes
+        self.hidden_dims = hidden_dims
+        self.dropout = dropout
         self.confidence = confidence
 
         self.model = ForwardNN(
-            input_dim=num_featuers,
+            input_dim=num_features,
             output_dim=num_classes,
             hidden_dims=hidden_dims,
             dropout=dropout,
-            softmax=(confidence is not None)
+            # softmax=(confidence is not None)
         )
 
         self.criterion = nn.CrossEntropyLoss()
@@ -47,15 +53,15 @@ class NNClassifier:
         self.best_loss = float('inf')
         self.patience_counter = 0
 
-        self.logger = logging.getLogger(self.__class__.__name__)
-        self.logger.setLevel(logging.INFO)
+        if not self.logger:
+            self.logger = logging.getLogger(self.__class__.__name__)
 
     def train_with(
             self,
-            features: List[List[float]] | np.ndarray,
-            labels: List[int] | np.ndarray,
-            validate_features: List[List[float]] | np.ndarray = None,
-            validate_labels: List[int] | np.ndarray = None,
+            features: Union[List[List[float]], np.ndarray],
+            labels: Union[List[int], np.ndarray],
+            validate_features: Union[List[List[float]], np.ndarray] = None,
+            validate_labels: Union[List[int], np.ndarray] = None,
             batch_size: int = 32,
             num_epochs: int = None,
             patience: int = None,
@@ -125,7 +131,7 @@ class NNClassifier:
         self.logger.info(f'Validation Loss: {val_loss:.4f}')
         return val_loss
 
-    def infer(self, features: List[List[float]] | np.ndarray) -> np.ndarray:
+    def infer(self, features: Union[List[List[float]], np.ndarray]) -> np.ndarray:
         # Ensure the model is in evaluation mode
         self.model.eval()
 
@@ -158,10 +164,55 @@ class NNClassifier:
 
         return np.c_[predicted.numpy(), max_probs.numpy()]  # Convert the tensor back to a numpy array if needed
 
+    def _metadata(self):
+        return {
+            "num_features": self.num_features,
+            "num_classes": self.num_classes,
+            "hidden_dims": self.hidden_dims,
+            "dropout": self.dropout,
+            "confidence": self.confidence,
+            "default_epochs": self.default_epochs,
+            "default_patience": self.default_patience,
+        }
+
+    @classmethod
+    def __metadata_file(cls, path: str) -> str:
+        return os.path.join(path, f"{__class__.__name__}.json")
+
+    @classmethod
+    def __model_file(cls, path: str) -> str:
+        return os.path.join(path, "model")
+
     def save(self, path: str):
-        pass
+        os.makedirs(path, exist_ok=True)
+
+        with open(self.__metadata_file(path), "w") as fp:
+            json.dump(self._metadata(), fp)
+
+        torch.save(self.model.state_dict(), self.__model_file(path))
 
     @classmethod
     def load(cls, path: str) -> "NNClassifier":
-        pass
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"Directory {path} not found.")
+
+        metadata_file = cls.__metadata_file(path)
+        try:
+            with open(metadata_file, "r") as fp:
+                metadata = json.load(fp)
+        except Exception as e:
+            cls.logger.error(f"Problem accessing {metadata_file}: {e}")
+
+        # Reconstruct NNClassifier
+        classifier = NNClassifier(**metadata)
+
+        # Load back torch model
+        model_file = cls.__model_file(path)
+        try:
+            classifier.model.load_state_dict(torch.load(model_file))
+        except Exception as e:
+            cls.logger.error(f"Problem loading model from {model_file}: {e}")
+
+        return classifier
+
 
