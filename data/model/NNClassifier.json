@@ -1,0 +1,1 @@
+{"num_features": 768, "num_classes": 10, "hidden_dims": [256, 256], "dropout": null, "confidence": 0.9, "default_epochs": 60, "default_patience": 3}

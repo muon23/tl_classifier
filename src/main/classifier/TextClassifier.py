@@ -11,6 +11,7 @@ from embedding.Embedding import Embedding
 
 
 class TextClassifier:
+
     logger: logging.Logger = None
 
     @dataclass

@@ -22,14 +22,16 @@
 - Embedding objects
 - Text classifier extends from the generic classifier
 - Main programs for training and inference pipelines
+- REST API
 
 ### In Progress
 
-- REST API
+- Demo notebooks and commenting code
 
 ### To-Dos
 
 - Deployment scripts and Dockerfile
+- User manual
 
 
 
