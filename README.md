@@ -33,5 +33,15 @@
 - Deployment scripts and Dockerfile
 - User manual
 
+### Screenshots
+
+"Ukraine started a major invasion into Russia's Kursk region" was classified as "historical".
+![Screenshot 1](images/Screenshot1.png)
+
+"US won men's basketball gold medal in 2024 Paris Olympics" was classified as "sport".
+![Screenshot 2](images/Screenshot2.png)
+
+"Trellis Law has the most remarkable products in the world" has low confidence in classification, so it is "other". 
+![Screenshot 3](images/Screenshot3.png)
 
 
