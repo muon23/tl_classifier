@@ -21,7 +21,7 @@ def parse_arguments() -> argparse.Namespace:
 
     # Add arguments
     parser.add_argument("-c", "--config", type=str, default=DEFAULT_CONFIG_FILE,
-                        help=f"Configura (default: '{DEFAULT_CONFIG_FILE}'.")
+                        help=f"Configura (default: '{DEFAULT_CONFIG_FILE}').")
     parser.add_argument("--data", type=str, default=None,
                         help="Path to the directory containing training dataset.")
     parser.add_argument("--model", type=str, default=None,
