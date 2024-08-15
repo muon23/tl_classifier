@@ -5,20 +5,26 @@
 
 - *src/main*: Source code
   - *classifier*: Classifier classes
-    - `ForwardNN.py`: A generic feed forward neural network
-    - `NNClassifier.py`: A generic classifier built around `ForwardNN`
-    - `TextClassifier.py`: A text classifier built around `NNClassifier`
+    - [`ForwardNN.py`](src/main/classifier/ForwardNN.py): A generic feed forward neural network
+    - [`NNClassifier.py`](src/main/classifier/NNClassifier.py): A generic classifier built around `ForwardNN`
+    - [`TextClassifier.py`](src/main/classifier/TextClassifier.py): A text classifier built around `NNClassifier`
   - *embedding*: Text embedding classes
-    - `Embedding.py`: An abstract class for text embedding models
-    - `TransformersEmbedding.py`: A concrete subclass of `Embedding` using the HuggingFace interface.
-    - `AdaEmbedding.py`: (not yet implemented) A concrete subclass of `Embedding` using the OpenAI interface.
+    - [`Embedding.py`](src/main/embedding/Embedding.py): An abstract class for text embedding models
+    - [`TransformersEmbedding.py`](src/main/embedding/TransformersEmbedding.py): A concrete subclass of `Embedding` using the HuggingFace interface.
+    - [`AdaEmbedding.py`](src/main/embedding/AdaEmbedding.py): (not yet implemented) A concrete subclass of `Embedding` using the OpenAI interface.
   - *training*: Main programs for training pipeline and playground for inference
+    - [`train.py`](src/main/training/train.py): Runs the training pipeline
+    - [`play.py`](src/main/training/play.py): To play with the trained classifier model.
   - *api*: REST API server
+    - [`server.py`](src/main/api/server.py): Starts the API server
 - *src/test*: Unit test codes
 - *notebooks*: Jupyter notebooks for demos and experiments
-- *deployment*: Scripts for deployment
+- *deployment*: Scripts for deployment.  DevOps could use resources in this directory as a template for the deployment of the system.
+  (See descriptions in the **User Gides** section below.)
 - *data*: Contains training data, unit tests data and outputs, trained classifier models.
-  (Training dataset is not checked in to this public GitHub.)
+  - *training*: Training dataset (Not checked in to this public project.)
+  - *model*: Trained model ready for production
+  - *testing*: Test data or output for unit tests (Not checked in)
 
 ## User Guides
 
@@ -260,10 +266,10 @@ INFO:     192.168.65.1:54375 - "POST /classify_document HTTP/1.1" 200 OK
 - Main programs for training and inference pipelines
 - REST API
 - Deployment scripts and Dockerfile
+- Comments and user guides
 
 ### In Progress
 
-- Comments and user guides
 
 ### To-Dos
 
