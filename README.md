@@ -5,7 +5,13 @@
 
 - *src/main*: Source code
   - *classifier*: Classifier classes
+    - `ForwardNN.py`: A generic feed forward neural network
+    - `NNClassifier.py`: A generic classifier built around `ForwardNN`
+    - `TextClassifier.py`: A text classifier built around `NNClassifier`
   - *embedding*: Text embedding classes
+    - `Embedding.py`: An abstract class for text embedding models
+    - `TransformersEmbedding.py`: A concrete subclass of `Embedding` using the HuggingFace interface.
+    - `AdaEmbedding.py`: (not yet implemented) A concrete subclass of `Embedding` using the OpenAI interface.
   - *training*: Main programs for training pipeline and playground for inference
   - *api*: REST API server
 - *src/test*: Unit test codes
