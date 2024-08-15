@@ -15,7 +15,8 @@ logger = logging.getLogger()
 DEFAULT_CONFIG_FILE = "config.properties"
 DEFAULT_SERVER_PORT = 8000
 
-CONFIG_SECTION = "text_classify"
+DEFAULT_CONFIG_SECTION = "DEFAULT"
+API_CONFIG_SECTION = "API"
 
 classifier: TextClassifier | None = None
 
@@ -29,13 +30,6 @@ class Document(BaseModel):
 class ClassificationResponse(BaseModel):
     message: str
     label: str
-
-
-# Load property file
-def load_config(file_path: str) -> configparser.ConfigParser:
-    config = configparser.ConfigParser()
-    config.read(file_path)
-    return config
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -62,8 +56,18 @@ def parse_arguments() -> argparse.Namespace:
 
 # Parse command-line arguments and configuration file
 args = parse_arguments()
-config = load_config(args.config)
-root: str = config[CONFIG_SECTION].get('root', '')
+config = configparser.ConfigParser()
+config.read(args.config)
+
+
+def get_property(section: str, key: str, default=None) -> str:
+    value = config[section].get(key)
+    if not value:
+        value = config[DEFAULT_CONFIG_SECTION].get(key, default)
+    return value
+
+
+root: str = get_property(API_CONFIG_SECTION, 'root', '')
 if args.root:
     root = args.root
 
@@ -94,8 +98,8 @@ def main():
     global root, classifier, args, config
 
     # Get parameters from the config file
-    port = int(config[CONFIG_SECTION].get('port', str(DEFAULT_SERVER_PORT)))
-    model = config[CONFIG_SECTION].get('model', None)
+    port = int(get_property(API_CONFIG_SECTION, 'port', str(DEFAULT_SERVER_PORT)))
+    model = get_property(API_CONFIG_SECTION, 'model')
 
     # Override parameters with command line arguments
     if args.port:

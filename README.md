@@ -23,15 +23,15 @@
 - Text classifier extends from the generic classifier
 - Main programs for training and inference pipelines
 - REST API
+- Deployment scripts and Dockerfile
 
 ### In Progress
 
-- Demo notebooks and commenting code
+- Comments and user guides
 
 ### To-Dos
 
-- Deployment scripts and Dockerfile
-- User manual
+- None so far
 
 ### Screenshots
 
