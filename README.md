@@ -17,7 +17,7 @@
 - *src/test*: Unit test codes
 - *notebooks*: Jupyter notebooks for demos and experiments
 - *deployment*: Scripts for deployment
-- *data*: Contains test data
+- *data*: Contains training data, unit tests data and outputs, trained classifier models.
 
 ## User Guides
 
