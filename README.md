@@ -18,6 +18,7 @@
 - *notebooks*: Jupyter notebooks for demos and experiments
 - *deployment*: Scripts for deployment
 - *data*: Contains training data, unit tests data and outputs, trained classifier models.
+  (Training dataset are not checked in to this public GitHub.)
 
 ## User Guides
 
